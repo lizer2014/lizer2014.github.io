@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.jpg?v=7.2.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.jpg?v=7.2.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-bounce.min.css?v=1.0.2">
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    search: {
+      root: '/',
+      path: 'search.xml'
+    },
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="安装nodejshttps://nodejs.org/dist/latest-v6.x/node-v6.17.1-win-x64.zip下载解压，设置环境变量 下载安装githttps://github.com/git-for-windows/git/releases/download/v2.22.0.windows.1/Git-2.22.0-64-bit.exe 安装hexo需要指定版本安装，因">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nodejs安装Hexo(Next主题)搭建博客">
+<meta property="og:url" content="http://yoursite.com/2019/07/31/Nodejs安装Hexo-Next主题-搭建博客/index.html">
+<meta property="og:site_name" content="lizer&#39;s blog">
+<meta property="og:description" content="安装nodejshttps://nodejs.org/dist/latest-v6.x/node-v6.17.1-win-x64.zip下载解压，设置环境变量 下载安装githttps://github.com/git-for-windows/git/releases/download/v2.22.0.windows.1/Git-2.22.0-64-bit.exe 安装hexo需要指定版本安装，因">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-31T07:04:36.977Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nodejs安装Hexo(Next主题)搭建博客">
+<meta name="twitter:description" content="安装nodejshttps://nodejs.org/dist/latest-v6.x/node-v6.17.1-win-x64.zip下载解压，设置环境变量 下载安装githttps://github.com/git-for-windows/git/releases/download/v2.22.0.windows.1/Git-2.22.0-64-bit.exe 安装hexo需要指定版本安装，因">
+  <link rel="canonical" href="http://yoursite.com/2019/07/31/Nodejs安装Hexo-Next主题-搭建博客/">
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Nodejs安装Hexo(Next主题)搭建博客 | lizer's blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lizer's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br/>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-search">
+          <a href="javascript:;" class="popup-trigger">
+          
+            <i class="menu-item-icon fa fa-search fa-fw"></i> <br/>搜索</a>
+        </li>
+      
+    </ul>
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+    </div>
+</nav>
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/31/Nodejs安装Hexo-Next主题-搭建博客/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lizer">
+      <meta itemprop="description" content="我啊~嘿嘿">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lizer's blog">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">Nodejs安装Hexo(Next主题)搭建博客
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-31 14:58:29 / 修改时间：15:04:36" itemprop="dateCreated datePublished" datetime="2019-07-31T14:58:29+08:00">2019-07-31</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon"
+              >
+                <i class="fa fa-eye"></i>
+                 阅读次数： 
+                <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+              </span>
+            </span>
+          <br/>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span title="本文字数">7.8k</span>
+            </span>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span title="阅读时长">7 分钟</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="安装nodejs"><a href="#安装nodejs" class="headerlink" title="安装nodejs"></a>安装nodejs</h2><p><a href="https://nodejs.org/dist/latest-v6.x/node-v6.17.1-win-x64.zip" target="_blank" rel="noopener">https://nodejs.org/dist/latest-v6.x/node-v6.17.1-win-x64.zip</a><br>下载解压，设置环境变量</p>
+<p>下载安装git<br><a href="https://github.com/git-for-windows/git/releases/download/v2.22.0.windows.1/Git-2.22.0-64-bit.exe" target="_blank" rel="noopener">https://github.com/git-for-windows/git/releases/download/v2.22.0.windows.1/Git-2.22.0-64-bit.exe</a></p>
+<h2 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h2><p>需要指定版本安装，因为版本的变化，经常会导致出现各种问题<br>npm install -g <a href="mailto:hexo-cli@1.1.0" target="_blank" rel="noopener">hexo-cli@1.1.0</a></p>
+<h2 id="本地搭建hexo"><a href="#本地搭建hexo" class="headerlink" title="本地搭建hexo"></a>本地搭建hexo</h2><p>hexo init blog<br>cd blog</p>
+<p>调式运行博客：<br>hexo server</p>
+<p>本地访问<br>localhost:4000</p>
+<p>ctrl+c可结束运行</p>
+<h2 id="博客关联github"><a href="#博客关联github" class="headerlink" title="博客关联github"></a>博客关联github</h2><h3 id="github注册账号"><a href="#github注册账号" class="headerlink" title="github注册账号"></a>github注册账号</h3><p>lizer2014<br>创建仓库lizer2014.github.io</p>
+<h3 id="git配置"><a href="#git配置" class="headerlink" title="git配置"></a>git配置</h3><p>git config –global user.name “lizer2014”<br>git config –global user.email “<a href="mailto:646136740@qq.com" target="_blank" rel="noopener">646136740@qq.com</a>“</p>
+<p>git配置查看<br>git config –global user.name<br>git config –global user.email</p>
+<h3 id="生成密钥"><a href="#生成密钥" class="headerlink" title="生成密钥"></a>生成密钥</h3><p>ssh-keygen -t rsa -C “<a href="mailto:646136740@qq.com" target="_blank" rel="noopener">646136740@qq.com</a>“<br>将id_rsa.pub文件添加到github的ssh keys上</p>
+<h3 id="配置hexo的部署信息"><a href="#配置hexo的部署信息" class="headerlink" title="配置hexo的部署信息"></a>配置hexo的部署信息</h3><p>blog项目下_config.yml文件，修改Deployment<br>deploy:<br>  type: git<br>  repo: <a href="mailto:git@lizer2014.com" target="_blank" rel="noopener">git@lizer2014.com</a>:lizer2014/lizer2014.github.io.git<br>  branch: master</p>
+<h3 id="hexo部署到github上"><a href="#hexo部署到github上" class="headerlink" title="hexo部署到github上"></a>hexo部署到github上</h3><p>cd blog<br>npm install <a href="mailto:hexo-deployer-git@0.3.0" target="_blank" rel="noopener">hexo-deployer-git@0.3.0</a> –save</p>
+<p>生成静态文件部署到github<br>hexo clean<br>hexo generate<br>hexo deploy</p>
+<h2 id="绑定域名"><a href="#绑定域名" class="headerlink" title="绑定域名"></a>绑定域名</h2><p>github setting custom domain</p>
+<p>永久访问<br>此时有一个问题是每次更新博客都要在github上设置一次的个性域名, 这是因为在更新博客的时候会把CNAME文件给删除, 我们在blog/source目录添加一个CNAME文件可解决. 注意文件无后缀. 键入lizer2016.cn保存即可</p>
+<h2 id="Next主题安装"><a href="#Next主题安装" class="headerlink" title="Next主题安装"></a>Next主题安装</h2><p>后面会有两个配置，一个是博客配置，一个是主题配置<br>所有命令行命令全部是在博客根目录打开命令行下输入的<br>git clone <a href="https://github.com/theme-next/hexo-theme-next" target="_blank" rel="noopener">https://github.com/theme-next/hexo-theme-next</a> themes/next<br>next 7.2.0<br>安装完成后，打开博客配置文件修改最上方的theme项为next</p>
+<h3 id="修改语言"><a href="#修改语言" class="headerlink" title="修改语言"></a>修改语言</h3><p>修改博客配置文件下的language项为zh-CN<br>title: lizer’s blog<br>subtitle:<br>description: 我啊~嘿嘿<br>keywords:<br>author: lizer<br>language: zh-CN<br>timezone:</p>
+<h3 id="修改菜单及创建分类页"><a href="#修改菜单及创建分类页" class="headerlink" title="修改菜单及创建分类页"></a>修改菜单及创建分类页</h3><p>修改主题配置文件下的menu项，按需要打开菜单。例如我需要把标签页面打开，就把tags项前面的#去掉就行了。随后根据标签页或者分类页输入:</p>
+<p>hexo new page categories    // 来新建出分类页<br>hexo new page tags    // 新建出标签页。<br>hexo new page about    // 新建出关于页</p>
+<p>menu:<br>  home: / || home<br>  categories: /categories/ || th<br>  tags: /tags/ || tags<br>  about: /about/ || user<br>  archives: /archives/ || archive</p>
+<p>在source每个对应页添加type和制定模板</p>
+<h3 id="修改主题风格"><a href="#修改主题风格" class="headerlink" title="修改主题风格"></a>修改主题风格</h3><p>Next自带四种主题风格，可以在主题配置文件搜索Scheme项，将需要的风格前的#去掉，注意只能开启一个风格。我是用的是Gemini主题</p>
+<h3 id="设置作者头像"><a href="#设置作者头像" class="headerlink" title="设置作者头像"></a>设置作者头像</h3><p>编辑主题配置文件，搜索修改字段 avatar， 值设置成头像的链接地址。可以设置成在线的图片地址。也可以把图片放在本地。<br>本地设置：放置在source/images目录下，设置为url: /images/avatar.jpg<br>avatar:<br>  url: /images/avatar.jpg<br>  rounded: true<br>  rotated: true</p>
+<p>这个rounded项可以设置头像为圆形，设置为ture后会自动根据头像的尺寸将头像变化为圆形或者椭圆，头像图片为正方形的话则为圆形。长方形的话长宽相差越大，椭圆越明显。<br>设置opacity的值控制头像的透明度，值为0 - 1。<br>rotated项为头像旋转，设置为true，则鼠标指到头像时头像会旋转。</p>
+<h3 id="设置代码高亮主题"><a href="#设置代码高亮主题" class="headerlink" title="设置代码高亮主题"></a>设置代码高亮主题</h3><p>NexT 使用 Tomorrow Theme作为代码高亮，共有5款主题供你选择。 NexT 默认使用的是 白色的 normal 主题，可选的值有 normal，night， night blue， night bright， night eighties<br>更改 主题配置文件中的highlight_theme 字段，将其值设定成你所喜爱的高亮主题即可。</p>
+<h3 id="侧边栏社交链接"><a href="#侧边栏社交链接" class="headerlink" title="侧边栏社交链接"></a>侧边栏社交链接</h3><p>侧栏社交链接的修改包含两个部分， 配置在 主题配置文件 中。social字段为连接，格式为显示文本: 链接地址 || Font Awesome图标名称</p>
+<p>图标名称 是 Font Awesome 图标的名字（不必带 fa- 前缀）。enable 选项用于控制是否显示图标，你可以设置成 false 来去掉图标。例如: 百度: <a href="https://baidu.com" target="_blank" rel="noopener">https://baidu.com</a> || firefox<br>Font Awesome图标可以到Font Awesome查看</p>
+<h3 id="设置RSS"><a href="#设置RSS" class="headerlink" title="设置RSS"></a>设置RSS</h3><p>NexT 中 RSS 有三个设置选项，满足特定的使用场景。 更改主题配置文件，设定 rss 字段的值：<br>false：禁用 RSS，不在页面上显示 RSS 连接。<br>留空：默认就是留空的，使用 Hexo 生成的 Feed 链接。 你可以需要先安装 hexo-generator-feed 插件。<br>安装方法：根目录下命令行输入</p>
+<p>npm install hexo-generator-feed –save</p>
+<h3 id="设置网站图标"><a href="#设置网站图标" class="headerlink" title="设置网站图标"></a>设置网站图标</h3><p>在EasyIcon中分别找一张（16 16与32 32）的ico图标,或者去别的网站下载或者制作，并将图标名称改为favicon16.ico与favicon32.ico，然后把图标放在/themes/next/source/images或者放在根目录的/source/images文件夹里。<br>在主题配置文件内搜索favicon字段，把 small、medium字段的地址修改为/images/favicon16.ico 与 /images/favicon32.ico</p>
+<h3 id="实现全站-文章数字统计-阅读时长"><a href="#实现全站-文章数字统计-阅读时长" class="headerlink" title="实现全站/文章数字统计/阅读时长"></a>实现全站/文章数字统计/阅读时长</h3><p>根目录命令运行<br>npm install hexo-symbols-count-time –save<br>博客配置文件底部添加如下内容，保存。<br>symbols_count_time:<br>  symbols: true<br>  time: true<br>  total_symbols: true<br>  total_time: true</p>
+<h3 id="添加顶部加载条"><a href="#添加顶部加载条" class="headerlink" title="添加顶部加载条"></a>添加顶部加载条</h3><p>最新版本的Next主题是内置了加载条功能的。<br>根目录打开命令行，输入如下命令：</p>
+<p>git clone <a href="https://github.com/theme-next/theme-next-pace" target="_blank" rel="noopener">https://github.com/theme-next/theme-next-pace</a> themes/next/source/lib/pace<br>然后主题配置文件搜索pace字段，修改pace: false为pace: true即可开启加载条功能，修改下方的pace-theme字段还可以修改加载条的样式。<br>pace:<br>  enable: true<br>  theme: bounce</p>
+<h3 id="修改网页底部的小图标"><a href="#修改网页底部的小图标" class="headerlink" title="修改网页底部的小图标"></a>修改网页底部的小图标</h3><p>主题配置文件搜索footer字段，修改下方的icon字段下的name字段。name字段后的名字是 Font Awesome 图标的名字（不必带 fa- 前缀）。</p>
+<p>animated自动为闪动开关，设置为true后图标会闪动。<br>以及可以设置图标颜色，color处填入16进制颜色代码即可。注意保留原来的双引号。</p>
+<p>去掉页面底部的强力驱动信息及设置备案信息<br>主题配置文件搜索copyright字段，修改powered下的enable字段的true为false即可去掉强力驱动部分的内容。</p>
+<p>同样的theme下的enable设置为false的话可以去掉页面底部的主题信息。</p>
+<p>如果博客有备案的话，下方beian字段设置为true，icp后填写备案号。</p>
+<h3 id="添加动态背景"><a href="#添加动态背景" class="headerlink" title="添加动态背景"></a>添加动态背景</h3><p>根目录打开命令行，输入：<br>git clone <a href="https://github.com/theme-next/theme-next-canvas-nest" target="_blank" rel="noopener">https://github.com/theme-next/theme-next-canvas-nest</a> themes/next/source/lib/canvas-nest<br>主题配置文件搜索canvas-nest字段，enable项设置为true。</p>
+<h3 id="增加回到顶部按钮及显示当前浏览进度"><a href="#增加回到顶部按钮及显示当前浏览进度" class="headerlink" title="增加回到顶部按钮及显示当前浏览进度"></a>增加回到顶部按钮及显示当前浏览进度</h3><p>主题配置文件搜索b2t字段，将b2t字段的false修改为true即可，（注意此功能只能用于Pisces和Gemini主题）。<br>将下方的scrollpercent字段设置为true即可实现当前浏览进度的显示。</p>
+<h3 id="增加本地搜索功能"><a href="#增加本地搜索功能" class="headerlink" title="增加本地搜索功能"></a>增加本地搜索功能</h3><p>首先安装插件，根目录命令行输入<br>npm install hexo-generator-searchdb –save<br>编辑博客配置文件，新增以下内容到任意位置：<br>search:<br>  path: search.xml<br>  field: post<br>  format: html<br>  limit: 10000<br>主题配置文件搜索local_search字段，设置enable为true</p>
+<h3 id="修改文章底部的那个带-号的标签"><a href="#修改文章底部的那个带-号的标签" class="headerlink" title="修改文章底部的那个带#号的标签"></a>修改文章底部的那个带#号的标签</h3><p>修改模板/themes/next/layout/_macro/post.swig，搜索 rel=”tag”&gt;#，将 # 换成<i class="fa fa-tag"></i>，此处的图标用的是Font-Awesome，可以根据需要换成其他的图标。</p>
+<h3 id="在每篇文章末尾统一添加“本文结束”标记"><a href="#在每篇文章末尾统一添加“本文结束”标记" class="headerlink" title="在每篇文章末尾统一添加“本文结束”标记"></a>在每篇文章末尾统一添加“本文结束”标记</h3><p>在路径 \themes\next\layout_macro 中新建 passage-end-tag.swig 文件,并添加以下内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    &#123;% if not is_index %&#125;</span><br><span class="line">        &lt;div style=&quot;text-align:center;color: #ccc;font-size:14px;&quot;&gt;-------------本文结束&lt;i class=&quot;fa fa-paw&quot;&gt;&lt;/i&gt;感谢您的阅读-------------&lt;/div&gt;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>接着打开\themes\next\layout_macro\post.swig文件，在post-body 之后， post-footer 之前添加如下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">  &#123;% if not is_index %&#125;</span><br><span class="line">    &#123;% include &apos;passage-end-tag.swig&apos; %&#125;</span><br><span class="line">  &#123;% endif %&#125;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="增加网站访问量统计"><a href="#增加网站访问量统计" class="headerlink" title="增加网站访问量统计"></a>增加网站访问量统计</h3><p>在主题设置文件中搜索busuanzi, 设置:<br>busuanzi_count:<br>  enable: true<br>  total_visitors: true<br>  total_visitors_icon: user<br>  total_views: true<br>  total_views_icon: eye<br>  post_views: true<br>  post_views_icon: eye</p>
+<h2 id="文章更新"><a href="#文章更新" class="headerlink" title="文章更新"></a>文章更新</h2><h3 id="文章中添加图片"><a href="#文章中添加图片" class="headerlink" title="文章中添加图片"></a>文章中添加图片</h3><p>本地存储的方式添加图片(我使用的方法)<br>开启资源文件夹功能. 在 _config.yml 文件中设置</p>
+<p>post_asset_folder: true<br>在根目录下执行:</p>
+<p>npm install <a href="https://github.com/CodeFalling/hexo-asset-image" target="_blank" rel="noopener">https://github.com/CodeFalling/hexo-asset-image</a> –save<br>确保在 source/_posts 下创建和 markdown 文件同名的文件夹，里面存放需要的图片，然后在 markdown 中插入图片</p>
+<p>! <a href="hexo/image.png" title="悬停信息">hexo image</a></p>
+<h3 id="文章中添加下载资源"><a href="#文章中添加下载资源" class="headerlink" title="文章中添加下载资源"></a>文章中添加下载资源</h3><p>在source目录下新建download文件夹，将需要上传的文件复制到该目录, 例如xx.xls.</p>
+<p>在_posts博文中，插入：</p>
+<p><a href="/download/xx.xls" title="悬停信息">点击下载</a><br>值得注意的是, txt/md/jpg/png等格式点击会直接在浏览器打开, 想下载的话, 需要复制链接到下载软件中下载</p>
+<h3 id="首页自动折叠"><a href="#首页自动折叠" class="headerlink" title="首页自动折叠"></a>首页自动折叠</h3><p>主题配置文件<br>auto_excerpt:<br>  enable: true<br>  length: 200</p>
+<h3 id="打赏"><a href="#打赏" class="headerlink" title="打赏"></a>打赏</h3><p>主题配置<br>reward_settings:<br>Front-matter.<br>  enable: true<br>  animation: false<br>  comment: 等我熬尽一日苦，喂你一口甜</p>
+<p>reward:<br>  wechatpay: /images/wechatpay.png</p>
+<h3 id="在每篇文章末尾统一添加“本文结束”标记-1"><a href="#在每篇文章末尾统一添加“本文结束”标记-1" class="headerlink" title="在每篇文章末尾统一添加“本文结束”标记"></a>在每篇文章末尾统一添加“本文结束”标记</h3><p>在路径 \themes\next\layout_macro 中新建 passage-end-tag.swig 文件,并添加以下内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    &#123;% if not is_index %&#125;</span><br><span class="line">        &lt;div style=&quot;text-align:center;color: #ccc;font-size:14px;&quot;&gt;-------------本文结束&lt;i class=&quot;fa fa-paw&quot;&gt;&lt;/i&gt;感谢您的阅读-------------&lt;/div&gt;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>接着打开\themes\next\layout_macro\post.swig文件，在post-body 之后， post-footer 之前添加如下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">  &#123;% if not is_index %&#125;</span><br><span class="line">    &#123;% include &apos;passage-end-tag.swig&apos; %&#125;</span><br><span class="line">  &#123;% endif %&#125;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="更新文章文件"><a href="#更新文章文件" class="headerlink" title="更新文章文件"></a>更新文章文件</h2><p>根目录命令行输入hexo new &lt;模板&gt; &lt;文章名&gt;新建文章<br>其中&lt;模板&gt;在scaffolds中，默认情况下有三个模板post、draft、page</p>
+<p>参数  功能  路径<br>post    新建文章    /source/_posts/<br>draft   新建草稿    /source/_drafts/<br>page    新建页面（标签页，分类页等）  /source/</p>
+<h3 id="更新普通文章"><a href="#更新普通文章" class="headerlink" title="更新普通文章"></a>更新普通文章</h3><p>在blog目录下执行：</p>
+<p>new post “post1”<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">- 编辑该文件（遵循Markdown规则）</span><br><span class="line">- 修改起始字段</span><br><span class="line">  - title 文章的标题</span><br><span class="line">  - date 创建日期 （文件的创建日期 ）</span><br><span class="line">  - updated 修改日期 （ 文件的修改日期）</span><br><span class="line">  - comments 是否开启评论 true</span><br><span class="line">  - tags 标签    //建议使用分类</span><br><span class="line">  - categories 分类    //建议使用分类</span><br><span class="line">  - permalink url中的名字（文件名）</span><br><span class="line">- 编写正文内容（MakeDown）</span><br><span class="line">- hexo clean 删除本地静态文件（Public目录），可不执行。</span><br><span class="line">- hexo g 生成本地静态文件（Public目录）</span><br><span class="line">- hexo d 将本地静态文件推送至github</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## gitalk实现hexo博客评论功能</span><br><span class="line">Register Application</span><br><span class="line">在GitHub上注册新应用，链接：https://github.com/settings/applications/new</span><br><span class="line">Application name： # 应用名称，随意</span><br><span class="line">Homepage URL： # 网站URL</span><br><span class="line">Application description # 描述，随意</span><br><span class="line">Authorization callback URL：# 网站URL</span><br><span class="line"></span><br><span class="line">主题配置</span><br></pre></td></tr></table></figure></p>
+<p>gitalk:<br>  enable: true<br>  github_id: lizer2014 # GitHub repo owner<br>  repo: lizer2014.gitHub.io # Repository name to store issues<br>  client_id:  # GitHub Application Client ID<br>  client_secret:  # GitHub Application Client Secret<br>  admin_user: lizer2014 # GitHub repo owner and collaborators, only these guys can initialize gitHub issues<br>  distraction_free_mode: true # Facebook-like distraction free modeforce language value<br>```</p>
+<h2 id="分享NeedMoreShare2"><a href="#分享NeedMoreShare2" class="headerlink" title="分享NeedMoreShare2"></a>分享NeedMoreShare2</h2><p>git clone <a href="https://github.com/theme-next/theme-next-needmoreshare2" target="_blank" rel="noopener">https://github.com/theme-next/theme-next-needmoreshare2</a> source/lib/needsharebutton</p>
+<p>主题配置<br>needmoreshare2:<br>  enable: true<br>  postbottom:<br>    enable: true<br>    options:<br>      iconStyle: default<br>      boxForm: horizontal<br>      position: bottomCenter<br>      networks: Weibo,Wechat,Douban,QQZone,Twitter,Facebook</p>
+<h2 id="博客迁移"><a href="#博客迁移" class="headerlink" title="博客迁移"></a>博客迁移</h2><p>npm install hexo-migrator-rss –save<br>插件安装完成后，执行下列命令，从 RSS 迁移所有文章。source 可以是文件路径或网址。<br>$ hexo migrate rss</p>
+<p>参考：<br><a href="https://shawnlin.cc/Next%E4%B8%BB%E9%A2%98%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BC%98%E5%8C%96/" target="_blank" rel="noopener">Next主题安装与优化</a><br><a href="https://cjjkkk.github.io/gitalk/" target="_blank" rel="noopener">使用gittalk实现hexo博客评论功能</a></p>
+
+    </div>
+
+    
+    
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    
+      <div>
+        <div id="reward-container">
+  <div>等我熬尽一日苦，喂你一口甜</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.png" alt="lizer 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+      </div>
+
+    <footer class="post-footer">
+        <div class="post-widgets">
+        
+
+        
+
+        
+          <div class="social-share">
+            
+            
+              <div id="needsharebutton-postbottom">
+                <span class="btn">
+                  <i class="fa fa-share-alt" aria-hidden="true"></i>
+                </span>
+              </div>
+            
+          </div>
+        
+        </div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="lizer">
+  <p class="site-author-name" itemprop="name">lizer</p>
+  <div class="site-description motion-element" itemprop="description">我啊~嘿嘿</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/lizer2014" title="GitHub &rarr; https://github.com/lizer2014" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:lizer2016@126.com" title="E-Mail &rarr; mailto:lizer2016@126.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://weibo.com/p/1005053645318624" title="Weibo &rarr; https://weibo.com/p/1005053645318624" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://blog.csdn.net/u014595668" title="csdn &rarr; https://blog.csdn.net/u014595668" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>csdn</a>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装nodejs"><span class="nav-number">1.</span> <span class="nav-text">安装nodejs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装hexo"><span class="nav-number">2.</span> <span class="nav-text">安装hexo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本地搭建hexo"><span class="nav-number">3.</span> <span class="nav-text">本地搭建hexo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#博客关联github"><span class="nav-number">4.</span> <span class="nav-text">博客关联github</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#github注册账号"><span class="nav-number">4.1.</span> <span class="nav-text">github注册账号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git配置"><span class="nav-number">4.2.</span> <span class="nav-text">git配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成密钥"><span class="nav-number">4.3.</span> <span class="nav-text">生成密钥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置hexo的部署信息"><span class="nav-number">4.4.</span> <span class="nav-text">配置hexo的部署信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hexo部署到github上"><span class="nav-number">4.5.</span> <span class="nav-text">hexo部署到github上</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绑定域名"><span class="nav-number">5.</span> <span class="nav-text">绑定域名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Next主题安装"><span class="nav-number">6.</span> <span class="nav-text">Next主题安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#修改语言"><span class="nav-number">6.1.</span> <span class="nav-text">修改语言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改菜单及创建分类页"><span class="nav-number">6.2.</span> <span class="nav-text">修改菜单及创建分类页</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改主题风格"><span class="nav-number">6.3.</span> <span class="nav-text">修改主题风格</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置作者头像"><span class="nav-number">6.4.</span> <span class="nav-text">设置作者头像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置代码高亮主题"><span class="nav-number">6.5.</span> <span class="nav-text">设置代码高亮主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#侧边栏社交链接"><span class="nav-number">6.6.</span> <span class="nav-text">侧边栏社交链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置RSS"><span class="nav-number">6.7.</span> <span class="nav-text">设置RSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置网站图标"><span class="nav-number">6.8.</span> <span class="nav-text">设置网站图标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现全站-文章数字统计-阅读时长"><span class="nav-number">6.9.</span> <span class="nav-text">实现全站/文章数字统计/阅读时长</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加顶部加载条"><span class="nav-number">6.10.</span> <span class="nav-text">添加顶部加载条</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改网页底部的小图标"><span class="nav-number">6.11.</span> <span class="nav-text">修改网页底部的小图标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加动态背景"><span class="nav-number">6.12.</span> <span class="nav-text">添加动态背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增加回到顶部按钮及显示当前浏览进度"><span class="nav-number">6.13.</span> <span class="nav-text">增加回到顶部按钮及显示当前浏览进度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增加本地搜索功能"><span class="nav-number">6.14.</span> <span class="nav-text">增加本地搜索功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改文章底部的那个带-号的标签"><span class="nav-number">6.15.</span> <span class="nav-text">修改文章底部的那个带#号的标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在每篇文章末尾统一添加“本文结束”标记"><span class="nav-number">6.16.</span> <span class="nav-text">在每篇文章末尾统一添加“本文结束”标记</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增加网站访问量统计"><span class="nav-number">6.17.</span> <span class="nav-text">增加网站访问量统计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文章更新"><span class="nav-number">7.</span> <span class="nav-text">文章更新</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文章中添加图片"><span class="nav-number">7.1.</span> <span class="nav-text">文章中添加图片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文章中添加下载资源"><span class="nav-number">7.2.</span> <span class="nav-text">文章中添加下载资源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#首页自动折叠"><span class="nav-number">7.3.</span> <span class="nav-text">首页自动折叠</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#打赏"><span class="nav-number">7.4.</span> <span class="nav-text">打赏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在每篇文章末尾统一添加“本文结束”标记-1"><span class="nav-number">7.5.</span> <span class="nav-text">在每篇文章末尾统一添加“本文结束”标记</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更新文章文件"><span class="nav-number">8.</span> <span class="nav-text">更新文章文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#更新普通文章"><span class="nav-number">8.1.</span> <span class="nav-text">更新普通文章</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分享NeedMoreShare2"><span class="nav-number">9.</span> <span class="nav-text">分享NeedMoreShare2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#博客迁移"><span class="nav-number">10.</span> <span class="nav-text">博客迁移</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-copyright"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lizer</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">8k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">7 分钟</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+  
+<script src="/lib/needsharebutton/needsharebutton.js"></script>
+<script>
+    pbOptions = {};
+      pbOptions.iconStyle = "default";
+    
+      pbOptions.boxForm = "horizontal";
+    
+      pbOptions.position = "middle";
+    
+      pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+    
+    new needShareButton('#needsharebutton-postbottom', pbOptions);
+</script>
+
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+  
+  <script src="/js/affix.js?v=7.2.0"></script>
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.2.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '44b8107b7facdc55ba2e',
+    clientSecret: '519b99aaba3440ada57336032232be7386f53c69',
+    repo: 'lizer2014.gitHub.io',
+    owner: 'lizer2014',
+    admin: ['lizer2014'],
+    id: md5(location.pathname),
+      language: 'zh-CN',
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+
+</body>
+</html>
