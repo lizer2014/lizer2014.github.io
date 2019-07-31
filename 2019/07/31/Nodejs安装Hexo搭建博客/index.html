@@ -68,7 +68,7 @@
 <meta property="og:site_name" content="lizer&#39;s blog">
 <meta property="og:description" content="使用nodejs的hexo插件，生成静态网页，然后部署到github上，使用github pages实现静态博客。hexo主题选用Next，评论系统可以使用gitalk。 安装nodejshttps://nodejs.org/dist/latest-v6.x/node-v6.17.1-win-x64.zip下载解压，设置环境变量 下载安装githttps://github.com/git-for-">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-31T07:44:15.834Z">
+<meta property="og:updated_time" content="2019-07-31T07:46:24.830Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nodejs安装Hexo搭建博客">
 <meta name="twitter:description" content="使用nodejs的hexo插件，生成静态网页，然后部署到github上，使用github pages实现静态博客。hexo主题选用Next，评论系统可以使用gitalk。 安装nodejshttps://nodejs.org/dist/latest-v6.x/node-v6.17.1-win-x64.zip下载解压，设置环境变量 下载安装githttps://github.com/git-for-">
@@ -290,7 +290,7 @@
                 
               
 
-              <time title="创建时间：2019-07-31 14:58:29 / 修改时间：15:44:15" itemprop="dateCreated datePublished" datetime="2019-07-31T14:58:29+08:00">2019-07-31</time>
+              <time title="创建时间：2019-07-31 14:58:29 / 修改时间：15:46:24" itemprop="dateCreated datePublished" datetime="2019-07-31T14:58:29+08:00">2019-07-31</time>
             </span>
           
             
@@ -396,7 +396,7 @@
 <h3 id="添加动态背景"><a href="#添加动态背景" class="headerlink" title="添加动态背景"></a>添加动态背景</h3><p>根目录打开命令行，输入：<br>git clone <a href="https://github.com/theme-next/theme-next-canvas-nest" target="_blank" rel="noopener">https://github.com/theme-next/theme-next-canvas-nest</a> themes/next/source/lib/canvas-nest<br>主题配置文件搜索canvas-nest字段，enable项设置为true。</p>
 <h3 id="增加回到顶部按钮及显示当前浏览进度"><a href="#增加回到顶部按钮及显示当前浏览进度" class="headerlink" title="增加回到顶部按钮及显示当前浏览进度"></a>增加回到顶部按钮及显示当前浏览进度</h3><p>主题配置文件搜索b2t字段，将b2t字段的false修改为true即可，（注意此功能只能用于Pisces和Gemini主题）。<br>将下方的scrollpercent字段设置为true即可实现当前浏览进度的显示。</p>
 <h3 id="增加本地搜索功能"><a href="#增加本地搜索功能" class="headerlink" title="增加本地搜索功能"></a>增加本地搜索功能</h3><p>首先安装插件，根目录命令行输入<br>npm install hexo-generator-searchdb –save<br>编辑博客配置文件，新增以下内容到任意位置：<br>search:<br>  path: search.xml<br>  field: post<br>  format: html<br>  limit: 10000<br>主题配置文件搜索local_search字段，设置enable为true</p>
-<h3 id="修改文章底部的那个带-号的标签"><a href="#修改文章底部的那个带-号的标签" class="headerlink" title="修改文章底部的那个带#号的标签"></a>修改文章底部的那个带#号的标签</h3><p>修改模板/themes/next/layout/_macro/post.swig，搜索 rel=”tag”&gt;#，将 # 换成<i class="fa fa-tag"></i>，此处的图标用的是Font-Awesome，可以根据需要换成其他的图标。</p>
+<h3 id="修改文章底部的那个带-号的标签"><a href="#修改文章底部的那个带-号的标签" class="headerlink" title="修改文章底部的那个带#号的标签"></a>修改文章底部的那个带#号的标签</h3><p>修改模板/themes/next/layout/_macro/post.swig，搜索 rel=”tag”&gt;#，将 # 换成<code>&lt;i class=&quot;fa fa-tag&quot;&gt;&lt;/i&gt;</code>，此处的图标用的是Font-Awesome，可以根据需要换成其他的图标。</p>
 <h3 id="在每篇文章末尾统一添加“本文结束”标记"><a href="#在每篇文章末尾统一添加“本文结束”标记" class="headerlink" title="在每篇文章末尾统一添加“本文结束”标记"></a>在每篇文章末尾统一添加“本文结束”标记</h3><p>在路径 \themes\next\layout_macro 中新建 passage-end-tag.swig 文件,并添加以下内容：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    &#123;% if not is_index %&#125;</span><br><span class="line">        &lt;div style=&quot;text-align:center;color: #ccc;font-size:14px;&quot;&gt;-------------本文结束&lt;i class=&quot;fa fa-paw&quot;&gt;&lt;/i&gt;感谢您的阅读-------------&lt;/div&gt;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
@@ -467,15 +467,15 @@
           
         
         <div class="post-tags">
-            <a href="/tags/blog/" rel="tag"># blog</a>
+            <a href="/tags/blog/" rel="tag"><i class="fa fa-tag"></i>blog</a>
           
-            <a href="/tags/nodejs/" rel="tag"># nodejs</a>
+            <a href="/tags/nodejs/" rel="tag"><i class="fa fa-tag"></i>nodejs</a>
           
-            <a href="/tags/next/" rel="tag"># next</a>
+            <a href="/tags/next/" rel="tag"><i class="fa fa-tag"></i>next</a>
           
-            <a href="/tags/github/" rel="tag"># github</a>
+            <a href="/tags/github/" rel="tag"><i class="fa fa-tag"></i>github</a>
           
-            <a href="/tags/gitalk/" rel="tag"># gitalk</a>
+            <a href="/tags/gitalk/" rel="tag"><i class="fa fa-tag"></i>gitalk</a>
           
         </div>
         <div class="post-widgets">
