@@ -68,7 +68,7 @@
 <meta property="og:site_name" content="lizer&#39;s blog">
 <meta property="og:description" content="使用nodejs的hexo插件，生成静态网页，然后部署到github上，使用github pages实现静态博客。hexo主题选用Next，评论系统可以使用gitalk。 安装nodejshttps://nodejs.org/dist/latest-v6.x/node-v6.17.1-win-x64.zip下载解压，设置环境变量 下载安装githttps://github.com/git-for-">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-31T07:46:24.830Z">
+<meta property="og:updated_time" content="2019-09-20T01:51:42.017Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nodejs安装Hexo搭建博客">
 <meta name="twitter:description" content="使用nodejs的hexo插件，生成静态网页，然后部署到github上，使用github pages实现静态博客。hexo主题选用Next，评论系统可以使用gitalk。 安装nodejshttps://nodejs.org/dist/latest-v6.x/node-v6.17.1-win-x64.zip下载解压，设置环境变量 下载安装githttps://github.com/git-for-">
@@ -290,11 +290,21 @@
                 
               
 
-              <time title="创建时间：2019-07-31 14:58:29 / 修改时间：15:46:24" itemprop="dateCreated datePublished" datetime="2019-07-31T14:58:29+08:00">2019-07-31</time>
+              <time title="创建时间：2019-07-31 14:58:29" itemprop="dateCreated datePublished" datetime="2019-07-31T14:58:29+08:00">2019-07-31</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-09-20 09:51:42" itemprop="dateModified" datetime="2019-09-20T09:51:42+08:00">2019-09-20</time>
+              </span>
             
           
             <span class="post-meta-item">
@@ -362,8 +372,11 @@
 <p>本地访问<br>localhost:4000</p>
 <p>ctrl+c可结束运行</p>
 <h2 id="博客关联github"><a href="#博客关联github" class="headerlink" title="博客关联github"></a>博客关联github</h2><h3 id="github注册账号"><a href="#github注册账号" class="headerlink" title="github注册账号"></a>github注册账号</h3><p>lizer2014<br>创建仓库lizer2014.github.io</p>
-<h3 id="git配置"><a href="#git配置" class="headerlink" title="git配置"></a>git配置</h3><p>git config –global user.name “lizer2014”<br>git config –global user.email “<a href="mailto:646136740@qq.com" target="_blank" rel="noopener">646136740@qq.com</a>“</p>
-<p>git配置查看<br>git config –global user.name<br>git config –global user.email</p>
+<h3 id="git配置"><a href="#git配置" class="headerlink" title="git配置"></a>git配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name &quot;lizer2014&quot;</span><br><span class="line">git config --global user.email &quot;646136740@qq.com&quot;</span><br></pre></td></tr></table></figure>
+
+<p>git配置查看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name</span><br><span class="line">git config --global user.email</span><br></pre></td></tr></table></figure>
+
 <h3 id="生成密钥"><a href="#生成密钥" class="headerlink" title="生成密钥"></a>生成密钥</h3><p>ssh-keygen -t rsa -C “<a href="mailto:646136740@qq.com" target="_blank" rel="noopener">646136740@qq.com</a>“<br>将id_rsa.pub文件添加到github的ssh keys上</p>
 <h3 id="配置hexo的部署信息"><a href="#配置hexo的部署信息" class="headerlink" title="配置hexo的部署信息"></a>配置hexo的部署信息</h3><p>blog项目下_config.yml文件，修改Deployment<br>deploy:<br>  type: git<br>  repo: <a href="mailto:git@lizer2014.com" target="_blank" rel="noopener">git@lizer2014.com</a>:lizer2014/lizer2014.github.io.git<br>  branch: master</p>
 <h3 id="hexo部署到github上"><a href="#hexo部署到github上" class="headerlink" title="hexo部署到github上"></a>hexo部署到github上</h3><p>cd blog<br>npm install <a href="mailto:hexo-deployer-git@0.3.0" target="_blank" rel="noopener">hexo-deployer-git@0.3.0</a> –save</p>
@@ -582,6 +595,8 @@
           
         
         
+        
+          
         
           
         
