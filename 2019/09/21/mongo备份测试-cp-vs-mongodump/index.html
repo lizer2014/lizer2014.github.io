@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.jpg?v=7.2.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.jpg?v=7.2.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-bounce.min.css?v=1.0.2">
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    search: {
+      root: '/',
+      path: 'search.xml'
+    },
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="mongo 备份测试环境db3 router3 config3 shard (3 repl / shard) oplog: 10Gcache: 1Gmaxconn: 8000    replSet name node name type ip port role    dbpd_dafs_config dbpd_dafs_config0 config 10.255.2.67 8600 master">
+<meta name="keywords" content="mongodump,backup">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mongo备份测试(cp vs mongodump)">
+<meta property="og:url" content="http://yoursite.com/2019/09/21/mongo备份测试-cp-vs-mongodump/index.html">
+<meta property="og:site_name" content="lizer&#39;s blog">
+<meta property="og:description" content="mongo 备份测试环境db3 router3 config3 shard (3 repl / shard) oplog: 10Gcache: 1Gmaxconn: 8000    replSet name node name type ip port role    dbpd_dafs_config dbpd_dafs_config0 config 10.255.2.67 8600 master">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-09-21T01:07:02.473Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mongo备份测试(cp vs mongodump)">
+<meta name="twitter:description" content="mongo 备份测试环境db3 router3 config3 shard (3 repl / shard) oplog: 10Gcache: 1Gmaxconn: 8000    replSet name node name type ip port role    dbpd_dafs_config dbpd_dafs_config0 config 10.255.2.67 8600 master">
+  <link rel="canonical" href="http://yoursite.com/2019/09/21/mongo备份测试-cp-vs-mongodump/">
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>mongo备份测试(cp vs mongodump) | lizer's blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">lizer's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br/>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-search">
+          <a href="javascript:;" class="popup-trigger">
+          
+            <i class="menu-item-icon fa fa-search fa-fw"></i> <br/>搜索</a>
+        </li>
+      
+    </ul>
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+    </div>
+</nav>
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/21/mongo备份测试-cp-vs-mongodump/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lizer">
+      <meta itemprop="description" content="我啊~嘿嘿">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lizer's blog">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">mongo备份测试(cp vs mongodump)
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-21 08:59:53 / 修改时间：09:07:02" itemprop="dateCreated datePublished" datetime="2019-09-21T08:59:53+08:00">2019-09-21</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mongo/" itemprop="url" rel="index"><span itemprop="name">mongo</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon"
+              >
+                <i class="fa fa-eye"></i>
+                 阅读次数： 
+                <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+              </span>
+            </span>
+          <br/>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span title="本文字数">10k</span>
+            </span>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span title="阅读时长">9 分钟</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="mongo-备份测试"><a href="#mongo-备份测试" class="headerlink" title="mongo 备份测试"></a>mongo 备份测试</h1><h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><h3 id="db"><a href="#db" class="headerlink" title="db"></a>db</h3><p>3 router<br>3 config<br>3 shard (3 repl / shard)</p>
+<p>oplog: 10G<br>cache: 1G<br>maxconn: 8000</p>
+<table>
+<thead>
+<tr>
+<th>replSet name</th>
+<th>node name</th>
+<th>type</th>
+<th>ip</th>
+<th>port</th>
+<th>role</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>dbpd_dafs_config</td>
+<td>dbpd_dafs_config0</td>
+<td>config</td>
+<td>10.255.2.67</td>
+<td>8600</td>
+<td>master</td>
+</tr>
+<tr>
+<td>dbpd_dafs_config</td>
+<td>dbpd_dafs_config1</td>
+<td>config</td>
+<td>10.255.2.69</td>
+<td>8600</td>
+<td>slave</td>
+</tr>
+<tr>
+<td>dbpd_dafs_config</td>
+<td>dbpd_dafs_config2</td>
+<td>config</td>
+<td>10.255.2.70</td>
+<td>8600</td>
+<td>slave</td>
+</tr>
+<tr>
+<td>——————</td>
+<td>——————–</td>
+<td>——–</td>
+<td>————-</td>
+<td>——-</td>
+<td>——–</td>
+</tr>
+<tr>
+<td>single</td>
+<td>single0</td>
+<td>router</td>
+<td>10.255.2.67</td>
+<td>20600</td>
+<td>none</td>
+</tr>
+<tr>
+<td>single</td>
+<td>single1</td>
+<td>router</td>
+<td>10.255.2.69</td>
+<td>20600</td>
+<td>none</td>
+</tr>
+<tr>
+<td>single</td>
+<td>single2</td>
+<td>router</td>
+<td>10.255.2.70</td>
+<td>20600</td>
+<td>none</td>
+</tr>
+<tr>
+<td>——————</td>
+<td>——————–</td>
+<td>——–</td>
+<td>————-</td>
+<td>——-</td>
+<td>——–</td>
+</tr>
+<tr>
+<td>dbpd_dafs_shard0</td>
+<td>dbpd_dafs_shard0d0</td>
+<td>shard</td>
+<td>10.255.2.67</td>
+<td>9600</td>
+<td>master</td>
+</tr>
+<tr>
+<td>dbpd_dafs_shard0</td>
+<td>dbpd_dafs_shard0d1</td>
+<td>shard</td>
+<td>10.255.2.69</td>
+<td>9600</td>
+<td>slave</td>
+</tr>
+<tr>
+<td>dbpd_dafs_shard0</td>
+<td>dbpd_dafs_shard0d2</td>
+<td>shard</td>
+<td>10.255.2.70</td>
+<td>9600</td>
+<td>slave</td>
+</tr>
+<tr>
+<td>——————</td>
+<td>——————–</td>
+<td>——–</td>
+<td>————-</td>
+<td>——-</td>
+<td>——–</td>
+</tr>
+<tr>
+<td>dbpd_dafs_shard1</td>
+<td>dbpd_dafs_shard1d0</td>
+<td>shard</td>
+<td>10.255.2.67</td>
+<td>9601</td>
+<td>master</td>
+</tr>
+<tr>
+<td>dbpd_dafs_shard1</td>
+<td>dbpd_dafs_shard1d1</td>
+<td>shard</td>
+<td>10.255.2.69</td>
+<td>9601</td>
+<td>slave</td>
+</tr>
+<tr>
+<td>dbpd_dafs_shard1</td>
+<td>dbpd_dafs_shard1d2</td>
+<td>shard</td>
+<td>10.255.2.70</td>
+<td>9601</td>
+<td>slave</td>
+</tr>
+</tbody></table>
+<h3 id="硬盘性能"><a href="#硬盘性能" class="headerlink" title="硬盘性能"></a>硬盘性能</h3><p>这里备份和数据盘是在同一个，拷贝时的性能如下<br>iostat -x 1 10<br>avg-cpu:  %user   %nice %system %iowait  %steal   %idle<br>           0.34    0.00    0.73    2.39    0.00   96.55</p>
+<p>Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util<br>sda               0.00     0.00  532.00 3195.00 104532.00 816160.00   494.07   109.54   29.21   80.97   20.59   0.27  99.90</p>
+<p>备份是在压测完后</p>
+<h3 id="性能监测"><a href="#性能监测" class="headerlink" title="性能监测"></a>性能监测</h3><p>mongostat –port 20600 -u mgmon -p wbdba  –authenticationDatabase admin<br>mongostat: (1 mongos)<br>insert query update delete getmore command flushes mapped vsize  res faults qrw arw net_in net_out conn                time<br>    *0    *0   8834     *0       0  8880|0       0     0B 3.74G 446M      0 0|0 0|0  12.9m   2.25m 3160 Sep 16 13:00:44.214<br>    *0    *0  13234     *0       0 12656|0       0     0B 3.74G 446M      0 0|0 0|0  18.4m   3.36m 3160 Sep 16 13:00:45.213<br>    *0    *0  20691     *0       0 19966|0       0     0B 3.74G 446M      0 0|0 0|0  29.0m   5.23m 3160 Sep 16 13:00:46.217<br>    *0    *0  16649     *0       0 17994|0       0     0B 3.74G 446M      0 0|0 0|0  26.1m   4.22m 3160 Sep 16 13:00:47.213<br>    *0    *0   9610     *0       0  9619|0       0     0B 3.74G 446M      0 0|0 0|0  14.0m   2.44m 3160 Sep 16 13:00:48.214<br>[OVERALL], RunTime(ms), 744887<br>[OVERALL], Throughput(ops/sec), 26849.7100902553<br>2000w</p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>数据集:<br>1 record = 10 fields * 100 char<br>2000w ~= 22G(data) ~= 34(storage)</p>
+<p>每个集合采用分片，3 shard平均分布<br>sh.enableSharding(“webank”)<br>sh.shardCollection(“webank.lizer_2000w”,{_id:1})<br>sh.shardCollection(“webank.lizer_2000w_b”,{_id:1})<br>sh.shardCollection(“webank.lizer_2000w_c”,{_id:1})<br>sh.shardCollection(“webank.lizer_2000w_d”,{_id:1})<br>sh.shardCollection(“webank.lizer_8000w”,{_id:1})<br>sh.shardCollection(“webank.lizer_16000w”,{_id:1})<br>数据导入ycsb，平均2w~5w ops(upsert)<br>./bin/ycsb load  mongodb -threads 4000 -P workloads/2000w 1&gt;logs/2000w.log 2&gt;logs/2000w.err &amp;<br>./bin/ycsb load  mongodb -threads 4000 -P workloads/2000w_b 1&gt;logs/2000w_b.log 2&gt;logs/2000w_b.err &amp;<br>./bin/ycsb load  mongodb -threads 1000 -P workloads/2000w_c 1&gt;logs/2000w_c.log 2&gt;logs/2000w_c.err &amp;<br>./bin/ycsb load  mongodb -threads 80 -P workloads/2000w_d 1&gt;logs/2000w_d.log 2&gt;logs/2000w_d.err &amp;<br>./bin/ycsb load  mongodb -threads 80 -P workloads/8000w 1&gt;logs/8000w.log 2&gt;logs/8000w.err &amp;<br>./bin/ycsb load  mongodb -threads 80 -P workloads/16000w 1&gt;logs/16000w.log 2&gt;logs16000w.err &amp;</p>
+<p>备份时，是在数据压力下（有大量的ops时，经常备份失败，跟oplog cache大小和ops大小有关）<br>primary shard2<br>mongodump 导出采用了gzip，备份集会小些，消耗会有提升<br>job=4同时mongodump备份使用了cron每分钟检查，所以一般都是3个分片同时备份，io会有些影响</p>
+<h3 id="每个分片耗时空间比较-cp和mongodump-–oplog-–gzip"><a href="#每个分片耗时空间比较-cp和mongodump-–oplog-–gzip" class="headerlink" title="每个分片耗时空间比较(cp和mongodump –oplog –gzip)"></a>每个分片耗时空间比较(cp和mongodump –oplog –gzip)</h3><p>job=4<br>| storage/G | data/G | max_c/G | num_c | cp min | cp size | dump min(zip) | dump size(zip) | dump min | dump size |<br>|———–|——–|———|——-|——–|———|—————|—————-|———-|———–|<br>|        22 |     14 |       7 |     2 |        |         | 6             | 11             |          |           |<br>|        33 |     21 |       7 |     3 |        |         | 6             | 16             |          |           |<br>|        44 |     28 |       7 |     4 |        |         | 8             | 24             |          |           |<br>|        91 |     57 |      29 |     5 |      4 |     100 | 25,22         | 45,42          |      4.4 |        59 |<br>|       156 |    114 |      57 |     6 |      9 |     150 | 110           | 82             |       24 |       115 |</p>
+<p>job=6<br>| shard  | storage/G | data/G | max_c/G | num_c | cp min | cp size | dump min(zip) | dump size(zip) | dump min | dump size |<br>|——–|———–|——–|———|——-|——–|———|—————|—————-|———-|———–|<br>| shard1 |    114    |  129   |  56.64  |   6   |  4.96  |   145G  |     53.50     |      82G       |  22.88   |    115G   |<br>| shard2 |    194    |  113   |  62.04  |   6   |  7.33  |   164G  |     61.26     |      81G       |  24.21   |    114G   |<br>| shard3 |    141    |  120   |  55.33  |   6   |  6.33  |   148G  |     63.85     |      86G       |  26.85   |    121G   |<br>|——–|———–|——–|———|——-|——–|———|—————|—————-|———-|———–|<br>| shard1 |        64 |     58 |   28.73 |     5 |   1.68 | 61G     |         26.85 | 42G            |     4.05 | 59G       |<br>| shard2 |       132 |     57 |      29 |     5 |   2.93 | 101G    |         32.98 | 41G            |    11.80 | 58G       |<br>| shard3 |        74 |     58 |   29.26 |     5 |   1.98 | 79G     |         27.25 | 42G            |     6.43 | 59G       |<br>|——–|———–|——–|———|——-|——–|———|—————|—————-|———-|———–|<br>| shard1 |        34 |     29 |     8.3 |     4 |   0.83 | 31G     |          7.73 | 21G            |     3.01 | 30G       |<br>| shard2 |        50 |     28 |    5.77 |     4 |   1.93 | 70G     |          8.66 | 21G            |     3.08 | 29G       |<br>| shard3 |        43 |     29 |    7.67 |     4 |   1.30 | 48G     |          7.08 | 21G            |     2.63 | 30G       |<br>|——–|———–|——–|———|——-|——–|———|—————|—————-|———-|———–|<br>| shard1 |        25 |     20 |    6.81 |     3 |   0.36 | 23G     |          6.61 | 15G            |     2.13 | 21G       |<br>| shard2 |        44 |     22 |    7.35 |     3 |   1.76 | 64G     |          7.18 | 17G            |     2.63 | 23G       |<br>| shard3 |        24 |     21 |    7.58 |     3 |   0.90 | 40G     |          6.53 | 16G            |     2.33 | 22G       |</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><ul>
+<li><p>mongodump</p>
+<ul>
+<li><p>mongodump 采用的是collections级别的多线程并发，备份速度跟最大集合的大小有很大关系 </p>
+</li>
+<li><p>默认备份是4job<br>2019-09-17T18:47:24.862+0800    [……………………]    webank.lizer_2000w   243014/6599570   (3.7%)<br>2019-09-17T18:47:24.862+0800    [……………………]    webank.lizer_8000w  500216/26422088   (1.9%)<br>2019-09-17T18:47:24.862+0800    [###…………………]  webank.lizer_2000w_b   886019/6421483  (13.8%)<br>2019-09-17T18:47:24.862+0800    [……………………]  webank.lizer_2000w_d   200147/7633598   (2.6%)<br>2019-09-17T18:47:24.862+0800</p>
+</li>
+<li><p>全备时指定–oplog，当备份oplog时间过长，备份开始被记录oplog 点被刷出，备份oplog失败<br>2019-09-16 13:41:10 - [ERROR] - [ dbpd_dafs_shard1 : 9601 ] fullbackup fail, will try next time…<br>2019-09-16T13:41:10.339+0800    Failed: oplog overflow: mongodump was unable to capture all new oplog entries during execution</p>
+</li>
+<li><p>mongodump会拖慢oplog的回放速度，当ops很大时（测试时4w ops），oplog不够大，从库变为recovery模式（需要重新全量从其他库同步）<br>2019-09-17T11:25:35.147+0800    Failed: error writing data for collection <code>webank.lizer_2000w</code> to disk: error reading collection: EOF</p>
+</li>
+<li><p>分片为了负载均衡，balancer会movechunk，版本会变化，导致报错<br>2019-09-16 14:00:50 - [ERROR] - [ dbpd_dafs_shard1 : 9601 ] fullbackup fail, will try next time…<br>2019-09-16T14:00:50.436+0800    Failed: error dumping oplog: error writing data for collection <code>.oplog</code> to disk: cannot dump with oplog if admin.system.version is modified</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>db.system.version.find()<br>{ “_id” : “featureCompatibilityVersion”, “version” : “3.6” }<br>{ “_id” : “authSchema”, “currentVersion” : 5 }<br>{ “_id” : “shardIdentity”, “clusterId” : ObjectId(“5d2c1fb40d084aac6626a93e”), “shardName” : “dbpd_dafs_shard1”, “configsvrConnectionString” : “dbpd_dafs_config/10.255.2.67:8906,10.255.2.69:8906,10.255.2.70:8906” }<br>{ “_id” : “minOpTimeRecovery”, “configsvrConnectionString” : “dbpd_dafs_config/10.255.2.67:8906,10.255.2.69:8906,10.255.2.70:8906”, “minOpTime” : { “ts” : Timestamp(1568612543, 14678), “t” : NumberLong(11) }, “minOpTimeUpdaters” : 0, “shardName” : “dbpd_dafs_shard1” }<br>{ “_id” : “startRangeDeletion”, “ns” : “webank.lizer_2000w_b”, “epoch” : ObjectId(“5d7f1575b43a1fb988beedd8”), “min” : { “_id” : “user5779780441414634474” }, “max” : { “_id” : “user5793529265481788866” } }</p>
+<ul>
+<li>恢复，应用备份-&gt;rebuild index-&gt;应用oplog，恢复时间更长</li>
+<li>空间小</li>
+</ul>
+<ul>
+<li>cp<ul>
+<li>需要fsyncLock，</li>
+<li>速度快</li>
+<li>恢复快，无需重建索引</li>
+<li>占用空间较大</li>
+<li>恢复后需要修改配置文件（ip，port，分片关系，副本集）</li>
+</ul>
+</li>
+</ul>
+<h2 id="备份脚本"><a href="#备份脚本" class="headerlink" title="备份脚本"></a>备份脚本</h2><h3 id="当前脚本"><a href="#当前脚本" class="headerlink" title="当前脚本"></a>当前脚本</h3><ul>
+<li>每分钟循环检测当前状态是否需要备份（前提是slave，跳过master、recovery）</li>
+<li>每次备份检测时，都检查当前的分片备份目录是否存在pid文件，存在说明已有进程在备份，跳过后续步骤</li>
+<li>当没有全备||周六且无其他当天的备份||fullback.lock 触发全备(mongodump)</li>
+<li>增备条件为oplog使用量大于0.5，已经备份oplog windows占总windows比例小于0.8</li>
+<li>当增备时，最近的增备或全备的最后的oplog record被oplog cap刷出，则touch fullback.lock，下次检测时触发全备</li>
+</ul>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><ul>
+<li>mongodump全备速率慢</li>
+<li>增备策略需要优化，当突增大量的文档更新操作时，oplog容易被刷出，导致增备失败</li>
+<li>对于分片，开启了collection shard，balancer和手动movechunk 会产生大量的oplog，其次版本变化导致全备失败</li>
+<li>mongodump会拖慢oplog的回放速度，测试时，两个从库，mongodump的更容易变成recovery模式（需要手动重新全量同步）</li>
+<li>控制节点增备策略问题，增备oplog增长比较慢，很难触发增备</li>
+</ul>
+<h3 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h3><ul>
+<li>全备改用cp选项，（fsynclock）</li>
+<li>防止硬盘的IO过高，增加可同时进行全备的个数</li>
+<li>增备策略</li>
+<li>优化控制节点的备份</li>
+</ul>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
+<li><p>oplog</p>
+<ul>
+<li>数据collection的drop，在oplog中记录为一条cmd，不会产生大量的oplog</li>
+<li>数据的movechunk记录的时一条条d/i，oplog可能会被刷出<br>dbpd_dafs_shard0:SECONDARY&gt; db.oplog.rs.find({“ns”:{$ne:””}}).sort({$natural:-1}).limit(10)<br>{ “ts” : Timestamp(1568758966, 3314), “t” : NumberLong(10), “h” : NumberLong(“4434686517193231122”), “v” : 2, “op” : “c”, “ns” : “config.$cmd”, “ui” : UUID(“0e25def1-a270-4136-9e5d-87ce4a04219c”), “wall” : ISODate(“2019-09-17T22:22:46.411Z”), “o” : { “drop” : “cache.chunks.webank.lizer_16000w” } }<br>{ “ts” : Timestamp(1568758966, 3313), “t” : NumberLong(10), “h” : NumberLong(“4547986359210973331”), “v” : 2, “op” : “d”, “ns” : “config.cache.collections”, “ui” : UUID(“c51c0ca2-c708-413d-892d-df930745bf30”), “wall” : ISODate(“2019-09-17T22:22:46.411Z”), “o” : { “_id” : “webank.lizer_16000w” } }<br>{ “ts” : Timestamp(1568758964, 4), “t” : NumberLong(10), “h” : NumberLong(“-2093926210899775967”), “v” : 2, “op” : “c”, “ns” : “webank.$cmd”, “ui” : UUID(“d5b23f5d-68eb-4bb8-9e63-979c1e8e3ba4”), “wall” : ISODate(“2019-09-17T22:22:44.432Z”), “o” : { “drop” : “lizer_16000w” } }<br>{ “ts” : Timestamp(1568729753, 6255), “t” : NumberLong(10), “h” : NumberLong(“-2146114616361287121”), “v” : 2, “op” : “d”, “ns” : “webank.lizer_16000w”, “ui” : UUID(“d5b23f5d-68eb-4bb8-9e63-979c1e8e3ba4”), “fromMigrate” : true, “wall” : ISODate(“2019-09-17T14:15:53.420Z”), “o” : { “_id” : “user213834907078841758” } }</li>
+</ul>
+</li>
+<li><p>oplog相关进程<br>ReplBatcher<br>rsSync-0<br>WT OplogTruncaterThread: local.oplog.rs<br>monitoring keys for HMAC</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+    
+      <div>
+        <div id="reward-container">
+  <div>等我熬尽一日苦，喂你一口甜</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.png" alt="lizer 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+      </div>
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    <footer class="post-footer">
+          
+        
+        <div class="post-tags">
+            <a href="/tags/mongodump/" rel="tag"><i class="fa fa-tag"></i>mongodump</a>
+          
+            <a href="/tags/backup/" rel="tag"><i class="fa fa-tag"></i>backup</a>
+          
+        </div>
+        <div class="post-widgets">
+        
+
+        
+
+        
+          <div class="social-share">
+            
+            
+              <div id="needsharebutton-postbottom">
+                <span class="btn">
+                  <i class="fa fa-share-alt" aria-hidden="true"></i>
+                </span>
+              </div>
+            
+          </div>
+        
+        </div>
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+              <a href="/2019/07/31/Nodejs安装Hexo搭建博客/" rel="next" title="Nodejs安装Hexo搭建博客">
+                <i class="fa fa-chevron-left"></i> Nodejs安装Hexo搭建博客
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+          </div>
+        </div>
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="lizer">
+  <p class="site-author-name" itemprop="name">lizer</p>
+  <div class="site-description motion-element" itemprop="description">我啊~嘿嘿</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/lizer2014" title="GitHub &rarr; https://github.com/lizer2014" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:lizer2016@126.com" title="E-Mail &rarr; mailto:lizer2016@126.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://weibo.com/p/1005053645318624" title="Weibo &rarr; https://weibo.com/p/1005053645318624" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://blog.csdn.net/u014595668" title="csdn &rarr; https://blog.csdn.net/u014595668" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>csdn</a>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#mongo-备份测试"><span class="nav-number">1.</span> <span class="nav-text">mongo 备份测试</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#环境"><span class="nav-number">1.1.</span> <span class="nav-text">环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#db"><span class="nav-number">1.1.1.</span> <span class="nav-text">db</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#硬盘性能"><span class="nav-number">1.1.2.</span> <span class="nav-text">硬盘性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#性能监测"><span class="nav-number">1.1.3.</span> <span class="nav-text">性能监测</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">1.2.</span> <span class="nav-text">测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#说明"><span class="nav-number">1.2.1.</span> <span class="nav-text">说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#每个分片耗时空间比较-cp和mongodump-–oplog-–gzip"><span class="nav-number">1.2.2.</span> <span class="nav-text">每个分片耗时空间比较(cp和mongodump –oplog –gzip)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析"><span class="nav-number">1.3.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#备份脚本"><span class="nav-number">1.4.</span> <span class="nav-text">备份脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#当前脚本"><span class="nav-number">1.4.1.</span> <span class="nav-text">当前脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">1.4.2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#改进"><span class="nav-number">1.4.3.</span> <span class="nav-text">改进</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">1.5.</span> <span class="nav-text">其他</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-copyright"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lizer</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">18k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17 分钟</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+  
+<script src="/lib/needsharebutton/needsharebutton.js"></script>
+<script>
+    pbOptions = {};
+      pbOptions.iconStyle = "default";
+    
+      pbOptions.boxForm = "horizontal";
+    
+      pbOptions.position = "middle";
+    
+      pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+    
+    new needShareButton('#needsharebutton-postbottom', pbOptions);
+</script>
+
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+  
+  <script src="/js/affix.js?v=7.2.0"></script>
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.2.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '44b8107b7facdc55ba2e',
+    clientSecret: '519b99aaba3440ada57336032232be7386f53c69',
+    repo: 'lizer2014.gitHub.io',
+    owner: 'lizer2014',
+    admin: ['lizer2014'],
+    id: md5(location.pathname),
+      language: 'zh-CN',
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+
+</body>
+</html>
